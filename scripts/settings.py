@@ -1,6 +1,6 @@
 SIZE = [1080, 720]
-NAME = "Empty Pygame Project"
+NAME = "Memory"
 FPS = 0  # 0 - unlimited
 COLORS = {
-    "background": (223, 223, 203)
+    "background": (255, 227, 211)
 }
