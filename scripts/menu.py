@@ -63,7 +63,7 @@ class Menu:
         }
 
         self.size_statuses = ["SMALL", "MEDIUM", "LARGE"]
-        self.size_number_statuses = ["4x4", "6x6", "8x8"]
+        self.size_number_statuses = [[4, 6, 8], [6, 7, 9], [6, 8, 10]]
         self.card_connection_statuses = ["EASY", "MEDIUM", "HARD"]
         self.card_connection_number_statuses = ["2", "3", "4"]
 
@@ -79,10 +79,10 @@ class Menu:
                 lambda: ...,
             ],
             "singleplayer_rules": [
-                lambda: self.change_size(to_right=False),
-                lambda: self.change_size(to_right=True),
-                lambda: self.change_card_connection(to_right=False),
-                lambda: self.change_card_connection(to_right=True),
+                lambda: self.change_size(self.idx_size-1),
+                lambda: self.change_size(self.idx_size+1),
+                lambda: self.change_card_connection(self.idx_card_connection-1),
+                lambda: self.change_card_connection(self.idx_card_connection+1),
                 lambda: self.change_game_type(),
                 lambda: self.set_random(),
                 lambda: ...,
@@ -112,34 +112,46 @@ class Menu:
                     elif type(element) == Text:
                         element.hide()
 
-    def change_size(self, to_right=True):
-        self.idx_size += 1 if to_right else -1
-        if self.idx_size < 0:
-            self.idx_size = 0
-        elif self.idx_size >= len(self.size_statuses):
+    def hide_menu(self):
+        for key, value in self.menu_layout.items():
+            for element in value:
+                if type(element) == Button:
+                    element.disable()
+                    element.hide()
+                elif type(element) == Text:
+                    element.hide()
+
+    def change_size(self, idx):
+        if idx > len(self.size_statuses) - 1:
             self.idx_size = len(self.size_statuses) - 1
+        elif idx < 0:
+            self.idx_size = 0
+        else:
+            self.idx_size = idx
 
         self.menu_layout["singleplayer_rules"][8].change_text(self.size_statuses[self.idx_size])
-        self.menu_layout["singleplayer_rules"][10].change_text(self.size_number_statuses[self.idx_size])
+        number = self.size_number_statuses[self.idx_card_connection][self.idx_size]
+        self.menu_layout["singleplayer_rules"][10].change_text(f"{number}x{number}")
 
-    def change_card_connection(self, to_right=True):
-        self.idx_card_connection += 1 if to_right else -1
-        if self.idx_card_connection < 0:
-            self.idx_card_connection = 0
-        elif self.idx_card_connection >= len(self.card_connection_statuses):
+    def change_card_connection(self, idx):
+        if idx > len(self.card_connection_statuses) - 1:
             self.idx_card_connection = len(self.card_connection_statuses) - 1
+        elif idx < 0:
+            self.idx_card_connection = 0
+        else:
+            self.idx_card_connection = idx
 
         self.menu_layout["singleplayer_rules"][9].change_text(self.card_connection_statuses[self.idx_card_connection])
         self.menu_layout["singleplayer_rules"][11].change_text(self.card_connection_number_statuses[self.idx_card_connection])
+        self.change_size(self.idx_size)
 
     def change_game_type(self):
         self.is_move = not self.is_move
         self.menu_layout["singleplayer_rules"][4].change_position((909, 377) if self.is_move else (949, 377))
 
     def set_random(self):
-        for i in range(2):
-            self.change_size(to_right=random.choice([True, False]))
-            self.change_card_connection(to_right=random.choice([True, False]))
+        self.change_size(random.randint(0, 2))
+        self.change_card_connection(random.randint(0, 2))
 
         for i in range(random.randint(0, 1)):
             self.change_game_type()

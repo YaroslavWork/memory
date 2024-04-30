@@ -68,22 +68,25 @@ class App:
                     for button in Button.buttons:
                         button.press()
 
+                    if self.field.is_game:
+                        card_idx = self.field.game.find_card(self.mouse_pos)
+                        if card_idx != -1:
+                            self.field.game.open_card(card_idx)
+
             if event.type == pygame.MOUSEBUTTONUP:  # If mouse button up...
                 if event.button == 1:
                     for button in Button.buttons:
                         button.release()
             #
-            # if event.type == pygame.KEYDOWN:  # If key button down...
-            #     if event.key == pygame.K_SPACE:
-            #         pass
+            if event.type == pygame.KEYDOWN:  # If key button down...
+                if event.key == pygame.K_SPACE:
+                    self.field.game.close_card()
 
             self.manager.process_events(event)
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 for i, element in enumerate(self.field.menu.menu_layout[self.field.menu.active_menu]):
-                    print(i, element)
                     if event.ui_element == element:
-                        print(i)
                         self.field.menu.pressing_button(i)
 
         self.keys = pygame.key.get_pressed()  # Get all keys (pressed or not)
@@ -94,6 +97,7 @@ class App:
         # -*-*- Physics Block -*-*-
         for button in Button.buttons:
             button.update(self.mouse_pos)
+        self.field.update()
         self.fps_text.change_text(f"FPS: {round(self.clock.get_fps())}")
         # -*-*-               -*-*-
 

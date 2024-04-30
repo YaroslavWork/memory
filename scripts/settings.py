@@ -17,6 +17,15 @@ COLORS = {
     "button_play_press": (252, 226, 197),
     "second_background": (246, 205, 183),
     "text_primary": (0, 0, 0),
+
+    "red_player_accent": (255, 126, 126),
+    "blue_player_accent": (126, 178, 255),
+    "green_player_accent": (129, 255, 126),
+    "yellow_player_accent": (252, 255, 126),
+    "red_player_secondary": (255, 175, 175),
+    "blue_player_secondary": (172, 225, 255),
+    "green_player_secondary": (196, 255, 175),
+    "yellow_player_secondary": (249, 255, 175),
 }
 
 FONTS = "JosefinSans-Regular"
